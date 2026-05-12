@@ -48,8 +48,8 @@ fprintf('  Decline: %+.1f%%\n\n', decline_pct);
 if abs(decline_pct) > 20
     % Significant decline - use only recent data
     split_fraction = 0.6;   % Use last 40%
-    fprintf('  ⚠️  Significant decline detected!\n');
-    fprintf('  ⚠️  Will retrain on last %.0f%% of data only\n\n', (1-split_fraction)*100);
+    fprintf('   Significant decline detected!\n');
+    fprintf('   Will retrain on last %.0f%% of data only\n\n', (1-split_fraction)*100);
 else
     % Moderate decline - use last 30%
     split_fraction = 0.7;
@@ -227,7 +227,7 @@ try
     fit_old = goodnessOfFit(y_pred_old.OutputData, data_train_for_old.OutputData, 'NRMSE') * 100;
     fprintf('  Old model fit on recent data: %.1f%%\n', fit_old);
 catch ME
-    fprintf('  ❌ Failed to predict with old model: %s\n', ME.message);
+    fprintf('   Failed to predict with old model: %s\n', ME.message);
     fit_old = NaN;
 end
 
@@ -272,8 +272,8 @@ fprintf('║                 SAVE RETRAINED MODEL?                         ║\n
 fprintf('╚═══════════════════════════════════════════════════════════════╝\n\n');
 
 if fit_new > fit_old
-    fprintf('  ✅ New model is BETTER (fit: %.1f%% vs %.1f%%)\n', fit_new, fit_old);
-    fprintf('  ✅ Recommendation: DEPLOY new model\n\n');
+    fprintf('   New model is BETTER (fit: %.1f%% vs %.1f%%)\n', fit_new, fit_old);
+    fprintf('   Recommendation: DEPLOY new model\n\n');
     
     user_response = input('Deploy new model? (y/n): ', 's');
     
@@ -302,17 +302,10 @@ if fit_new > fit_old
         save('P2_NLARX_NMPC_updated.mat', 'sys_new', 'scaling_params');
         fprintf('  ✓ Updated model saved to P2_NLARX_NMPC_updated.mat\n\n');
         
-        fprintf('  ✅ Deployment complete!\n\n');
-        fprintf('  Next steps:\n');
-        fprintf('    1. Clear persistent variables: clear functions\n');
-        fprintf('    2. Re-run: test_nmpc_hybrid_standalone\n');
-        fprintf('    3. Expected: RMSE < 2000 STB/day\n\n');
-    else
-        fprintf('  ⚠️  Deployment cancelled by user\n\n');
-    end
+        
 else
-    fprintf('  ⚠️  New model is NOT better (fit: %.1f%% vs %.1f%%)\n', fit_new, fit_old);
-    fprintf('  ⚠️  Recommendation: Keep old model, investigate data quality\n\n');
+    fprintf('    New model is NOT better (fit: %.1f%% vs %.1f%%)\n', fit_new, fit_old);
+    fprintf('    Recommendation: Keep old model, investigate data quality\n\n');
 end
 
 fprintf('╔═══════════════════════════════════════════════════════════════╗\n');
