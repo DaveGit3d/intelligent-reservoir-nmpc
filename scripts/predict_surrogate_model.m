@@ -2,7 +2,7 @@ function [y_pred_physical, y_pred_scaled] = predict_surrogate_model(...
     nlarx_model, u_physical, ypast_physical, upast_physical, scaling_params, verbose)
 % PREDICT_SURROGATE_MODEL: Multi-step prediction for NMPC using NLARX model
 %
-% ✅ CRITICAL FIX: Properly initializes input lags using actual past controls
+%  CRITICAL FIX: Properly initializes input lags using actual past controls
 %
 % INPUTS:
 %   nlarx_model       : Trained idnlarx model object
