@@ -150,7 +150,7 @@ elseif VRR < VRR_lower
     dcs_policy.clamp_counter = 0;
     
     if verbose
-        fprintf('║   🟢 RELEASE: VRR %.2f < %.1f (inject more)\n', VRR, VRR_lower);
+        fprintf('║    RELEASE: VRR %.2f < %.1f (inject more)\n', VRR, VRR_lower);
         fprintf('║      Injection: %.0f BBL/d\n', dcs_policy.current_injection_cap);
     end
 else
@@ -163,7 +163,7 @@ else
     end
     
     if verbose && dcs_policy.clamp_counter > 0
-        fprintf('║   🟡 STABLE: VRR in range (%.2f)\n', VRR);
+        fprintf('║    STABLE: VRR in range (%.2f)\n', VRR);
     end
 end
 
@@ -194,7 +194,7 @@ elseif VRR > 5.0
     operational_floor = max(8000, target_floor);
     
     if verbose && abs(VRR - 5.5) < 0.1  % Debug at midpoint
-        fprintf('║   ⚠️  High VRR (%.2f) - smooth floor: %.0f BBL/d (alpha=%.2f)\n', ...
+        fprintf('║     High VRR (%.2f) - smooth floor: %.0f BBL/d (alpha=%.2f)\n', ...
             VRR, operational_floor, alpha);
     end
 elseif VRR > 4.0
@@ -210,7 +210,7 @@ end
 % Apply floor
 if dcs_policy.current_injection_cap < operational_floor
     if verbose
-        fprintf('║   ⚠️  FLOOR TRIGGERED: Cap %.0f → %.0f BBL/d (q_oil=%.0f, VRR=%.2f)\n', ...
+        fprintf('║     FLOOR TRIGGERED: Cap %.0f → %.0f BBL/d (q_oil=%.0f, VRR=%.2f)\n', ...
             dcs_policy.current_injection_cap, operational_floor, q_oil, VRR);
     end
     dcs_policy.current_injection_cap = operational_floor;
@@ -225,14 +225,14 @@ if mcr > 0.85 && VRR > 7.0
     dcs_policy.water_cost_multiplier = min(4.0, dcs_policy.water_cost_multiplier * 1.15);
     
     if verbose
-        fprintf('║   ⚠️  ECON WARNING: MCR=%.1f%%, VRR=%.2f\n', mcr*100, VRR);
+        fprintf('║     ECON WARNING: MCR=%.1f%%, VRR=%.2f\n', mcr*100, VRR);
     end
     
     if VRR > 9.0
         dcs_policy.max_total_injection = max(15000, operational_floor);
         dcs_policy.water_cost_multiplier = 4.0;
         if verbose
-            fprintf('║   🆘 SURVIVAL MODE: Extreme VRR\n');
+            fprintf('║    SURVIVAL MODE: Extreme VRR\n');
         end
     end
 end
@@ -353,7 +353,7 @@ if verbose
     total_range = total_max - total_min;
     
     for i = 1:4
-        icon = iif(dcs_policy.inj_enabled(i), '✅', '🔴');
+        icon = iif(dcs_policy.inj_enabled(i), ' ', '');
         status = iif(dcs_policy.inj_enabled(i), 'ACTIVE ', 'SHUTIN ');
         if dcs_policy.inj_enabled(i)
             pct_min = 100 * dcs_policy.inj_min(i) / max(total_min, 1);
@@ -371,7 +371,7 @@ if verbose
         total_min, total_max, total_range);
     
     if total_range < 10000
-        fprintf('║   ⚠️  WARNING: Narrow feasible range (%.0f BBL/d)\n', total_range);
+        fprintf('║     WARNING: Narrow feasible range (%.0f BBL/d)\n', total_range);
     end
     
     fprintf('╚═══════════════════════════════════════════════════╝\n\n');
