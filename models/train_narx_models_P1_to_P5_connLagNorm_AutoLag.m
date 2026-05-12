@@ -69,7 +69,7 @@ for k = 1:numel(producers)
         T = rmmissing(T);
         
         if size(T,1) < 50
-            warning('   ⚠️ Too few samples (%d). Skipping lag=%d.', size(T,1), lag);
+            warning('    Too few samples (%d). Skipping lag=%d.', size(T,1), lag);
             continue;
         end
         
@@ -132,7 +132,7 @@ if R2_test > bestTestR2
     bestRes.test_actual = y_true_test;
     bestRes.test_predicted = y_pred_test;
     bestRes.test_time = T_test.Time;
-    bestRes.test_inputs = T_test{:, 2:end-1};  % ✅ CRITICAL ADDITION
+    bestRes.test_inputs = T_test{:, 2:end-1};  %  CRITICAL ADDITION
     bestRes.train_actual = y_true_train;
     bestRes.train_predicted = y_pred_train;
     bestRes.train_time = T_train.Time;
@@ -240,7 +240,7 @@ fprintf('   - Summary:  %s\n', plotFile4);
     validation.R2_test = bestTestR2;
     save(simulinkFile, 'net', 'modelType', 'scaler', 'XSigma', 'YSigma', 'bestLag', 'validation', '-v7.3');
     
-    fprintf('✅ Saved: %s and %s\n', modelFile, simulinkFile);
+    fprintf(' Saved: %s and %s\n', modelFile, simulinkFile);
 end
 
-fprintf('\n✅ Training complete. Use *_NLARX_Simulink.mat in NMPC.\n');
+fprintf('\n Training complete. Use *_NLARX_Simulink.mat in NMPC.\n');
