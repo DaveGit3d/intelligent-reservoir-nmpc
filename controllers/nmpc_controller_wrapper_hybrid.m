@@ -2,7 +2,7 @@ function [uo, diagnostics] = nmpc_controller_wrapper_hybrid(yo, upast, nlarx_mod
     scaling_params, params, producer_name, connMap)
 % NMPC_CONTROLLER_WRAPPER_HYBRID: Production-Grade Wrapper with Economic Tiers
 %
-% ✅ IMPLEMENTS:
+%  IMPLEMENTS:
 %    - Economic viability pre-screening (Tier 1)
 %    - Injector-level economic evaluation (Tier 2)
 %    - Adaptive bounds based on economics (Tier 3)
@@ -103,7 +103,7 @@ WOR_economic_limit = 8.0;  % Industry standard
 
 % Check if field is approaching economic limit
 if current_WOR > WOR_breakeven * 0.8 && verbose && call_count == 1
-    fprintf('\n⚠️  WARNING: Field approaching economic limit!\n');
+    fprintf('\n  WARNING: Field approaching economic limit!\n');
     fprintf('   Current WOR: %.2f (target: %.1f)\n', current_WOR, WOR_economic_limit);
     fprintf('   Breakeven WOR: %.2f\n', WOR_breakeven);
     fprintf('   → Consider EOR or partial shut-in\n\n');
@@ -140,7 +140,7 @@ for i = 1:4
     if injector_WOR > well_WOR_limit * 1.2
         injector_status(i) = 0;  % Shut-in candidate
         if verbose && call_count == 1
-            fprintf('   ⚠️  I%d: WOR %.1f > limit %.1f (w=%.2f) → SHUT-IN CANDIDATE\n', ...
+            fprintf('     I%d: WOR %.1f > limit %.1f (w=%.2f) → SHUT-IN CANDIDATE\n', ...
                 i, injector_WOR, well_WOR_limit, injector_weights(i));
         end
     else
@@ -249,7 +249,7 @@ else
             if injector_status(i) == 0
                 initial_guess(i+1) = params.inj_min(i);
                 if verbose && call_count <= 3
-                    fprintf('   🔴 I%d forced to minimum rate\n', i);
+                    fprintf('    I%d forced to minimum rate\n', i);
                 end
             end
         end
@@ -273,7 +273,7 @@ for i = 1:4
     if injector_status(i) == 0  % Shut-in candidate
         adaptive_inj_max(i) = params.inj_min(i) + 0.3 * (params.inj_max(i) - params.inj_min(i));
         if verbose && call_count <= 3
-            fprintf('   🔒 I%d: Max capped at %.0f BBL/d (was %.0f)\n', ...
+            fprintf('    I%d: Max capped at %.0f BBL/d (was %.0f)\n', ...
                 i, adaptive_inj_max(i), params.inj_max(i));
         end
     elseif injector_weights(i) > 0.7  % High-quality well
@@ -317,8 +317,8 @@ nmpc_config.constraints = struct();
 nmpc_config.constraints.BHP_min = params.BHP_min;      % bar
 nmpc_config.constraints.BHP_max = params.BHP_max;      % bar
 nmpc_config.constraints.BHP_target = BHP_target;       % bar
-nmpc_config.constraints.inj_min = adaptive_inj_min;    % ✅ Adaptive
-nmpc_config.constraints.inj_max = adaptive_inj_max;    % ✅ Adaptive
+nmpc_config.constraints.inj_min = adaptive_inj_min;    % Adaptive
+nmpc_config.constraints.inj_max = adaptive_inj_max;    % Adaptive
 
 % Economic context for fallback
 nmpc_config.constraints.current_water_cost = get_field(params, 'w_water', 5);
@@ -406,7 +406,7 @@ if verbose && (mod(call_count, 20) == 0 || call_count <= 3)
         yo, current_WOR, bias_correction);
     
     if emergency_shutin
-        fprintf('║ 🚨 EMERGENCY MODE ACTIVE\n');
+        fprintf('║  EMERGENCY MODE ACTIVE\n');
     end
     
     fprintf('║ BHP: %.1f → %.1f bar (historical: 100 bar)\n', BHP_current, uo(1));
@@ -414,9 +414,9 @@ if verbose && (mod(call_count, 20) == 0 || call_count <= 3)
     
     for i = 1:4
         if injector_status(i) == 0
-            status_str = '🔴';
+            status_str = ' ';
         else
-            status_str = '✅';
+            status_str = ' ';
         end
         fprintf('║   %s I%d: %.0f → %.0f (w=%.2f, Δ%+.0f)\n', ...
             status_str, i, inj_current(i), uo(i+1), injector_weights(i), ...
